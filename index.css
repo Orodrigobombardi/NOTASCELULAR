@@ -1,51 +1,71 @@
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    #newNote {
+      padding: 0;
+      height: 100%;
       width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
     }
 
-    button {
-      padding: 10px 15px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border: none;
+    header {
       background: #007bff;
       color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    textarea#newNote {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
       border-radius: 5px;
+      resize: none;
+      margin-bottom: 10px;
+    }
+
+    button#addBtn {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 20px;
       cursor: pointer;
       transition: background 0.3s;
     }
 
-    button:hover {
-      background: #0056b3;
+    button#addBtn:hover {
+      background: #218838;
     }
 
     .note {
       background: #fff;
       padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
       position: relative;
+      transition: transform 0.2s;
     }
 
     .note textarea {
@@ -53,22 +73,38 @@
       border: none;
       resize: none;
       font-size: 16px;
+      background: transparent;
     }
 
     .note-actions {
-      margin-top: 10px;
       text-align: right;
+      margin-top: 10px;
     }
 
     .note-actions button {
-      background: #dc3545;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
       margin-left: 10px;
+      cursor: pointer;
+      transition: opacity 0.2s;
     }
 
     .note-actions button.edit {
-      background: #28a745;
+      background: #ffc107;
+    }
+
+    .note-actions button.delete {
+      background: #dc3545;
     }
 
     .note-actions button:hover {
       opacity: 0.8;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.2em;
+      }
     }

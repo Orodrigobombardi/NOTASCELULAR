@@ -1,17 +1,20 @@
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <body>
     <link rel="stylesheet" href="index.css">
-  <div class="container">
-    <h2>🗒️ Meu Bloco de Notas</h2>
-    <textarea id="newNote" placeholder="Digite sua nova nota..."></textarea>
-    <button onclick="addNote()">Adicionar Nota</button>
-
+  <body>
+  <header>🗒️ Meu Bloco de Notas</header>
+  <main>
+    <textarea id="newNote" placeholder="Escreva sua nota..."></textarea>
+    <button id="addBtn" onclick="addNote()">➕ Adicionar Nota</button>
     <div id="notes"></div>
-  </div>
+  </main>
 
   <script>
     let notes = [];
 
-    // Carregar notas salvas
     window.onload = () => {
       const saved = localStorage.getItem('notas');
       if (saved) {
@@ -27,7 +30,7 @@
     function addNote() {
       const content = document.getElementById('newNote').value.trim();
       if (content) {
-        notes.push({ text: content });
+        notes.unshift({ text: content });
         document.getElementById('newNote').value = '';
         saveNotes();
         renderNotes();
@@ -58,6 +61,7 @@
 
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '🗑️ Apagar';
+        deleteBtn.className = 'delete';
         deleteBtn.onclick = () => deleteNote(index);
 
         actions.appendChild(editBtn);
@@ -77,14 +81,14 @@
         button.textContent = '💾 Salvar';
       } else {
         textarea.disabled = true;
-        notes[index].text = textarea.value;
+        notes[index].text = textarea.value.trim();
         saveNotes();
         button.textContent = '✏️ Editar';
       }
     }
 
     function deleteNote(index) {
-      if (confirm('Tem certeza que quer apagar essa nota?')) {
+      if (confirm('Quer mesmo apagar essa nota?')) {
         notes.splice(index, 1);
         saveNotes();
         renderNotes();
