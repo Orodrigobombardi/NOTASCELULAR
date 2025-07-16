@@ -1,12 +1,8 @@
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
+      margin: 0; padding: 0;
+      height: 100%; width: 100%;
       font-family: Arial, sans-serif;
       background: #f5f5f5;
       display: flex;
@@ -54,8 +50,19 @@
       transition: background 0.3s;
     }
 
-    button#addBtn:hover {
-      background: #218838;
+    button#addBtn:hover { background: #218838; }
+
+    .filters {
+      margin-bottom: 20px;
+    }
+
+    .filters input {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
     }
 
     .note {
@@ -65,7 +72,6 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       margin-bottom: 15px;
       position: relative;
-      transition: transform 0.2s;
     }
 
     .note textarea {
@@ -74,6 +80,13 @@
       resize: none;
       font-size: 16px;
       background: transparent;
+    }
+
+    .note small {
+      display: block;
+      margin-top: 5px;
+      color: #777;
+      font-size: 12px;
     }
 
     .note-actions {
@@ -91,20 +104,10 @@
       transition: opacity 0.2s;
     }
 
-    .note-actions button.edit {
-      background: #ffc107;
-    }
-
-    .note-actions button.delete {
-      background: #dc3545;
-    }
-
-    .note-actions button:hover {
-      opacity: 0.8;
-    }
+    .note-actions button.edit { background: #ffc107; }
+    .note-actions button.delete { background: #dc3545; }
+    .note-actions button:hover { opacity: 0.8; }
 
     @media (max-width: 600px) {
-      header {
-        font-size: 1.2em;
-      }
+      header { font-size: 1.2em; }
     }

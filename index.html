@@ -4,9 +4,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <body>
     <link rel="stylesheet" href="index.css">
-  <body>
+  </head>
+<body>
   <header>🗒️ Meu Bloco de Notas</header>
   <main>
+    <div class="filters">
+      <input type="text" id="searchText" placeholder="🔍 Procurar nota por texto..." oninput="renderNotes()" />
+      <input type="date" id="searchDate" oninput="renderNotes()" />
+    </div>
+
     <textarea id="newNote" placeholder="Escreva sua nota..."></textarea>
     <button id="addBtn" onclick="addNote()">➕ Adicionar Nota</button>
     <div id="notes"></div>
@@ -30,7 +36,10 @@
     function addNote() {
       const content = document.getElementById('newNote').value.trim();
       if (content) {
-        notes.unshift({ text: content });
+        notes.unshift({ 
+          text: content,
+          date: new Date().toISOString().slice(0,10) 
+        });
         document.getElementById('newNote').value = '';
         saveNotes();
         renderNotes();
@@ -43,35 +52,48 @@
       const notesContainer = document.getElementById('notes');
       notesContainer.innerHTML = '';
 
-      notes.forEach((note, index) => {
-        const noteDiv = document.createElement('div');
-        noteDiv.className = 'note';
+      const searchText = document.getElementById('searchText').value.toLowerCase();
+      const searchDate = document.getElementById('searchDate').value;
 
-        const textarea = document.createElement('textarea');
-        textarea.value = note.text;
-        textarea.disabled = true;
+      notes
+        .filter(note => {
+          const matchesText = note.text.toLowerCase().includes(searchText);
+          const matchesDate = searchDate ? note.date === searchDate : true;
+          return matchesText && matchesDate;
+        })
+        .forEach((note, index) => {
+          const noteDiv = document.createElement('div');
+          noteDiv.className = 'note';
 
-        const actions = document.createElement('div');
-        actions.className = 'note-actions';
+          const textarea = document.createElement('textarea');
+          textarea.value = note.text;
+          textarea.disabled = true;
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = '✏️ Editar';
-        editBtn.className = 'edit';
-        editBtn.onclick = () => toggleEdit(textarea, index, editBtn);
+          const dateInfo = document.createElement('small');
+          dateInfo.textContent = `Criada em: ${note.date}`;
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = '🗑️ Apagar';
-        deleteBtn.className = 'delete';
-        deleteBtn.onclick = () => deleteNote(index);
+          const actions = document.createElement('div');
+          actions.className = 'note-actions';
 
-        actions.appendChild(editBtn);
-        actions.appendChild(deleteBtn);
+          const editBtn = document.createElement('button');
+          editBtn.textContent = '✏️ Editar';
+          editBtn.className = 'edit';
+          editBtn.onclick = () => toggleEdit(textarea, index, editBtn);
 
-        noteDiv.appendChild(textarea);
-        noteDiv.appendChild(actions);
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = '🗑️ Apagar';
+          deleteBtn.className = 'delete';
+          deleteBtn.onclick = () => deleteNote(index);
 
-        notesContainer.appendChild(noteDiv);
-      });
+          actions.appendChild(editBtn);
+          actions.appendChild(deleteBtn);
+
+          noteDiv.appendChild(textarea);
+          noteDiv.appendChild(dateInfo);
+          noteDiv.appendChild(actions);
+
+          notesContainer.appendChild(noteDiv);
+        });
     }
 
     function toggleEdit(textarea, index, button) {
@@ -83,7 +105,7 @@
         textarea.disabled = true;
         notes[index].text = textarea.value.trim();
         saveNotes();
-        button.textContent = '✏️ Editar';
+        renderNotes();
       }
     }
 
