@@ -1,0 +1,74 @@
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    #newNote {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .note {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .note textarea {
+      width: 100%;
+      border: none;
+      resize: none;
+      font-size: 16px;
+    }
+
+    .note-actions {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .note-actions button {
+      background: #dc3545;
+      margin-left: 10px;
+    }
+
+    .note-actions button.edit {
+      background: #28a745;
+    }
+
+    .note-actions button:hover {
+      opacity: 0.8;
+    }
