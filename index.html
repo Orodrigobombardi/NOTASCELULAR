@@ -7,7 +7,7 @@
   </head>
 <body>
   <header>
-    🗒️ Bloco de Notas PRO+
+    🗒️ Bloco de Notas PRO++
     <button id="toggleDark" onclick="toggleDark()">🌙</button>
   </header>
   <main>
@@ -16,6 +16,7 @@
       <button onclick="exportBackup()">💾 Backup</button>
       <button onclick="importBackup()">📂 Restaurar</button>
       <button onclick="downloadPDF()">🖨️ PDF</button>
+      <button onclick="addChecklist()">✅ Checklist</button>
     </div>
 
     <div class="filters">
@@ -56,14 +57,29 @@
       const content = document.getElementById('newNote').value.trim();
       if (content) {
         notes.unshift({ 
+          type: 'note',
           text: content,
-          date: new Date().toISOString().slice(0,10) 
+          date: new Date().toISOString().slice(0,10)
         });
         document.getElementById('newNote').value = '';
         saveNotes();
         renderNotes();
       } else {
         alert('Digite algo antes de adicionar!');
+      }
+    }
+
+    function addChecklist() {
+      const title = prompt('Dê um título ao seu checklist:');
+      if (title) {
+        notes.unshift({
+          type: 'checklist',
+          title: title,
+          items: [],
+          date: new Date().toISOString().slice(0, 10)
+        });
+        saveNotes();
+        renderNotes();
       }
     }
 
@@ -76,7 +92,8 @@
 
       notes
         .filter(note => {
-          const matchesText = note.text.toLowerCase().includes(searchText);
+          const text = note.type === 'note' ? note.text : note.title + note.items.map(i => i.text).join(' ');
+          const matchesText = text.toLowerCase().includes(searchText);
           const matchesDate = searchDate ? note.date === searchDate : true;
           return matchesText && matchesDate;
         })
@@ -84,32 +101,109 @@
           const noteDiv = document.createElement('div');
           noteDiv.className = 'note';
 
-          const textarea = document.createElement('textarea');
-          textarea.value = note.text;
-          textarea.disabled = true;
+          if (note.type === 'note') {
+            const textarea = document.createElement('textarea');
+            textarea.value = note.text;
+            textarea.disabled = true;
 
-          const dateInfo = document.createElement('small');
-          dateInfo.textContent = `Criada em: ${note.date}`;
+            const dateInfo = document.createElement('small');
+            dateInfo.textContent = `Criada em: ${note.date}`;
 
-          const actions = document.createElement('div');
-          actions.className = 'note-actions';
+            const actions = document.createElement('div');
+            actions.className = 'note-actions';
 
-          const editBtn = document.createElement('button');
-          editBtn.textContent = '✏️ Editar';
-          editBtn.className = 'edit';
-          editBtn.onclick = () => toggleEdit(textarea, index, editBtn);
+            const editBtn = document.createElement('button');
+            editBtn.textContent = '✏️ Editar';
+            editBtn.className = 'edit';
+            editBtn.onclick = () => toggleEdit(textarea, index, editBtn);
 
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = '🗑️ Apagar';
-          deleteBtn.className = 'delete';
-          deleteBtn.onclick = () => deleteNote(index);
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '🗑️ Apagar';
+            deleteBtn.className = 'delete';
+            deleteBtn.onclick = () => deleteNote(index);
 
-          actions.appendChild(editBtn);
-          actions.appendChild(deleteBtn);
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
 
-          noteDiv.appendChild(textarea);
-          noteDiv.appendChild(dateInfo);
-          noteDiv.appendChild(actions);
+            noteDiv.appendChild(textarea);
+            noteDiv.appendChild(dateInfo);
+            noteDiv.appendChild(actions);
+
+          } else if (note.type === 'checklist') {
+            const titleInput = document.createElement('input');
+            titleInput.type = 'text';
+            titleInput.value = note.title;
+            titleInput.disabled = true;
+
+            const itemsDiv = document.createElement('div');
+            note.items.forEach((item, itemIndex) => {
+              const itemDiv = document.createElement('div');
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.checked = item.done;
+              checkbox.onchange = () => {
+                note.items[itemIndex].done = checkbox.checked;
+                saveNotes();
+              };
+
+              const itemText = document.createElement('input');
+              itemText.type = 'text';
+              itemText.value = item.text;
+              itemText.disabled = true;
+
+              itemDiv.appendChild(checkbox);
+              itemDiv.appendChild(itemText);
+              itemsDiv.appendChild(itemDiv);
+            });
+
+            const addItemBtn = document.createElement('button');
+            addItemBtn.textContent = '+ Item';
+            addItemBtn.className = 'edit';
+            addItemBtn.onclick = () => {
+              const newItem = prompt('Novo item:');
+              if (newItem) {
+                note.items.push({ text: newItem, done: false });
+                saveNotes();
+                renderNotes();
+              }
+            };
+
+            const actions = document.createElement('div');
+            actions.className = 'note-actions';
+
+            const editTitleBtn = document.createElement('button');
+            editTitleBtn.textContent = '✏️ Editar';
+            editTitleBtn.className = 'edit';
+            editTitleBtn.onclick = () => {
+              if (titleInput.disabled) {
+                titleInput.disabled = false;
+                titleInput.focus();
+                editTitleBtn.textContent = '💾 Salvar';
+              } else {
+                titleInput.disabled = true;
+                note.title = titleInput.value.trim();
+                saveNotes();
+                renderNotes();
+              }
+            };
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '🗑️ Apagar';
+            deleteBtn.className = 'delete';
+            deleteBtn.onclick = () => deleteNote(index);
+
+            actions.appendChild(addItemBtn);
+            actions.appendChild(editTitleBtn);
+            actions.appendChild(deleteBtn);
+
+            const dateInfo = document.createElement('small');
+            dateInfo.textContent = `Criada em: ${note.date}`;
+
+            noteDiv.appendChild(titleInput);
+            noteDiv.appendChild(itemsDiv);
+            noteDiv.appendChild(dateInfo);
+            noteDiv.appendChild(actions);
+          }
 
           notesContainer.appendChild(noteDiv);
         });
@@ -129,7 +223,7 @@
     }
 
     function deleteNote(index) {
-      if (confirm('Quer mesmo apagar essa nota?')) {
+      if (confirm('Quer mesmo apagar?')) {
         notes.splice(index, 1);
         saveNotes();
         renderNotes();
@@ -137,7 +231,10 @@
     }
 
     function exportTXT() {
-      const content = notes.map(n => `Data: ${n.date}\n${n.text}\n`).join('\n---\n');
+      const content = notes.map(n => {
+        if (n.type === 'note') return `Nota - ${n.date}\n${n.text}`;
+        else return `Checklist - ${n.date}\nTítulo: ${n.title}\nItens:\n${n.items.map(i => `- [${i.done ? 'x' : ' '}] ${i.text}`).join('\n')}`;
+      }).join('\n\n---\n\n');
       const blob = new Blob([content], { type: 'text/plain' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -180,13 +277,24 @@
       const doc = new jsPDF();
       let y = 10;
       notes.forEach((n, i) => {
-        doc.text(`Nota ${i + 1} - ${n.date}`, 10, y);
-        y += 7;
-        const lines = doc.splitTextToSize(n.text, 180);
-        lines.forEach(line => {
-          doc.text(line, 10, y);
+        if (n.type === 'note') {
+          doc.text(`Nota ${i + 1} - ${n.date}`, 10, y);
           y += 7;
-        });
+          const lines = doc.splitTextToSize(n.text, 180);
+          lines.forEach(line => {
+            doc.text(line, 10, y);
+            y += 7;
+          });
+        } else {
+          doc.text(`Checklist ${i + 1} - ${n.date}`, 10, y);
+          y += 7;
+          doc.text(`Título: ${n.title}`, 10, y);
+          y += 7;
+          n.items.forEach(item => {
+            doc.text(`- [${item.done ? 'x' : ' '}] ${item.text}`, 10, y);
+            y += 7;
+          });
+        }
         y += 5;
         if (y > 280) {
           doc.addPage();
