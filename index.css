@@ -62,6 +62,44 @@
       overflow-y: auto;
     }
 
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #555;
+      color: #fff;
+    }
+
+    .actions button:hover {
+      opacity: 0.9;
+    }
+
+    .filters {
+      margin-bottom: 15px;
+    }
+
+    .filters input {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background: var(--card-bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
     textarea#newNote {
       width: 100%;
       height: 100px;
@@ -90,22 +128,6 @@
     }
 
     button#addBtn:hover { opacity: 0.9; }
-
-    .filters {
-      margin-bottom: 20px;
-    }
-
-    .filters input {
-      padding: 10px;
-      width: 100%;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      background: var(--card-bg);
-      color: var(--text);
-      transition: background 0.3s, color 0.3s;
-    }
 
     .note {
       background: var(--card-bg);

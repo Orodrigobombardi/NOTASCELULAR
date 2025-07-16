@@ -7,10 +7,17 @@
   </head>
 <body>
   <header>
-    🗒️ Bloco de Notas
+    🗒️ Bloco de Notas PRO+
     <button id="toggleDark" onclick="toggleDark()">🌙</button>
   </header>
   <main>
+    <div class="actions">
+      <button onclick="exportTXT()">📄 Exportar TXT</button>
+      <button onclick="exportBackup()">💾 Backup</button>
+      <button onclick="importBackup()">📂 Restaurar</button>
+      <button onclick="downloadPDF()">🖨️ PDF</button>
+    </div>
+
     <div class="filters">
       <input type="text" id="searchText" placeholder="🔍 Procurar nota por texto..." oninput="renderNotes()" />
       <input type="date" id="searchDate" oninput="renderNotes()" />
@@ -21,6 +28,7 @@
     <div id="notes"></div>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     let notes = [];
 
@@ -126,6 +134,66 @@
         saveNotes();
         renderNotes();
       }
+    }
+
+    function exportTXT() {
+      const content = notes.map(n => `Data: ${n.date}\n${n.text}\n`).join('\n---\n');
+      const blob = new Blob([content], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'minhas_notas.txt';
+      link.click();
+    }
+
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(notes)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'backup_notas.json';
+      link.click();
+    }
+
+    function importBackup() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            notes = JSON.parse(reader.result);
+            saveNotes();
+            renderNotes();
+            alert('Backup restaurado com sucesso!');
+          } catch {
+            alert('Arquivo inválido.');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+      notes.forEach((n, i) => {
+        doc.text(`Nota ${i + 1} - ${n.date}`, 10, y);
+        y += 7;
+        const lines = doc.splitTextToSize(n.text, 180);
+        lines.forEach(line => {
+          doc.text(line, 10, y);
+          y += 7;
+        });
+        y += 5;
+        if (y > 280) {
+          doc.addPage();
+          y = 10;
+        }
+      });
+      doc.save('notas.pdf');
     }
   </script>
 </body>
