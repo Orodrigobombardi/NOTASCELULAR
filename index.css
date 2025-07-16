@@ -1,4 +1,4 @@
-:root {
+    :root {
       --bg: #f5f5f5;
       --text: #222;
       --header: #007bff;
@@ -114,6 +114,18 @@
       transition: background 0.3s, color 0.3s;
     }
 
+    #newTitle {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: var(--card-bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
     button#addBtn {
       width: 100%;
       padding: 15px;
@@ -137,6 +149,10 @@
       margin-bottom: 15px;
       position: relative;
       transition: background 0.3s;
+    }
+
+    .note h3 {
+      margin: 0 0 10px;
     }
 
     .note textarea {
@@ -181,6 +197,34 @@
     .note-actions button.edit { background: var(--button-edit); }
     .note-actions button.delete { background: var(--button-delete); }
     .note-actions button:hover { opacity: 0.8; }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 90%;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+    }
 
     @media (max-width: 600px) {
       header { font-size: 1.2em; }
